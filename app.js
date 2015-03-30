@@ -4,6 +4,7 @@ var express        = require( 'express' ),
     bodyParser     = require( 'body-parser' ),
     cookieParser   = require( 'cookie-parser' ),
     methodOverride = require( 'method-override' ),
+    error          = require( './middlewares/error' ),
     app            = express();
 
 app.set( 'views' , __dirname + '/views' );
@@ -19,6 +20,9 @@ expressLoad( 'models' )
           .then( 'controllers' )
           .then( 'routes' )
           .into( app );
+          
+app.use( error.notFound );
+app.use( error.serverError );
 
 app.listen( process.env.PORT , function() {
   console.log ( "Ntalk no ar." );
