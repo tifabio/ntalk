@@ -5,7 +5,9 @@ var express        = require( 'express' ),
     cookieParser   = require( 'cookie-parser' ),
     methodOverride = require( 'method-override' ),
     error          = require( './middlewares/error' ),
-    app            = express();
+    app            = express(),
+    server         = require( 'http' ).Server(app),
+    io             = require( 'socket.io' )(server);
 
 app.set( 'views' , __dirname + '/views' );
 app.set( 'view engine' , 'ejs' );
@@ -24,6 +26,14 @@ expressLoad( 'models' )
 app.use( error.notFound );
 app.use( error.serverError );
 
-app.listen( process.env.PORT , function() {
+io.sockets.on( 'connection', function(client) {
+    client.on( 'send-server', function(data) {
+        var msg = "<b>" + data.nome + ":</b> " + data.msg + "<br>";
+        client.emit( 'send-client', msg );
+        client.broadcast.emit( 'send-client', msg );
+    });
+});
+
+server.listen( process.env.PORT , function() {
   console.log ( "Ntalk no ar." );
 });
