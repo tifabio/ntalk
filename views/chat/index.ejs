@@ -3,6 +3,7 @@
 <script type="text/javascript" src="/socket.io/socket.io.js"></script>
 <script type="text/javascript">
     var socket = io(window.location.hostname);
+    socket.emit( 'join', '<%- sala %>');
     
     socket.on( 'send-client', function( msg ) {
         document.getElementById( 'chat' ).innerHTML += msg;

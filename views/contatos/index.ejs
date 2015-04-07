@@ -15,6 +15,7 @@
                 <tr>
                     <th>Nome</th>
                     <th>E-mail</th>
+                    <th>Status</th>
                     <th>Ação</th>
                 </tr>
             </thead>
@@ -24,8 +25,11 @@
                     <td><%- contato.nome %></td>
                     <td><%- contato.email %></td>
                     <td>
+                        <span id="notify_<%- contato.email %>" class="label">Offline</span>
+                    </td>
+                    <td>
                         <a href="/contato/<%- index %>" class="btn btn-info">Detalhes</a>
-                        <a href="/chat" class="btn btn-inverse">Conversar</a>
+                        <a href="/chat" id="chat_<%- contato.email %>" class="btn btn-inverse">Conversar</a>
                     </td>
                 </tr
                 <% }) %>
@@ -34,5 +38,6 @@
     </section>
 </section>
 
+<% include notify_script %>
 <% include ../exit %>
 <% include ../footer %>
