@@ -11,7 +11,10 @@ var express        = require( 'express' ),
     server         = require( 'http' ).Server(app),
     io             = require( 'socket.io' )(server),
     cookie         = cookieParser( SECRET ),
-    store          = new expressSession.MemoryStore();
+    store          = new expressSession.MemoryStore(),
+    mongoose       = require( 'mongoose' );
+    
+global.db = mongoose.connect( process.env.MONGO_URL );
 
 app.set( 'views' , __dirname + '/views' );
 app.set( 'view engine' , 'ejs' );
