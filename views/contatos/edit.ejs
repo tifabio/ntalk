@@ -5,10 +5,11 @@
 </header>
 <section class="row-fluid text-center">
     <form action="/contato/<%- contato._id %>?_method=PUT" method="post" class="well form-inline">
+        <input type="hidden" name="_csrf" value="<%- _csrf %>">
         <label>Nome:</label>
-        <input type="text" name="contato[nome]" value="<%- contato.nome %>" placeholder="Nome" class="input-medium">
+        <input type="text" name="contato[nome]" value="<%- contato.nome %>" placeholder="Nome" class="input-medium" required>
         <label>E-mail:</label>
-        <input type="text" name="contato[email]" value="<%- contato.email %>" placeholder="E-mail" class="input-medium">
+        <input type="text" name="contato[email]" value="<%- contato.email %>" placeholder="E-mail" class="input-medium" required>
         <button type="submit" class="btn btn-primary">Atualizar</button>
     </form>
 </section>

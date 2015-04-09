@@ -6,16 +6,15 @@ var express        = require( 'express' ),
     bodyParser     = require( 'body-parser' ),
     cookieParser   = require( 'cookie-parser' ),
     methodOverride = require( 'method-override' ),
+    csurf          = require( 'csurf' ),
     error          = require( './middlewares/error' ),
     app            = express(),
     server         = require( 'http' ).Server(app),
     io             = require( 'socket.io' )(server),
     cookie         = cookieParser( SECRET ),
-    store          = new expressSession.MemoryStore(),
-    mongoose       = require( 'mongoose' );
+    store          = new expressSession.MemoryStore();
     
-global.db = mongoose.connect( process.env.MONGO_URL );
-
+app.disable('x-powered-by');
 app.set( 'views' , __dirname + '/views' );
 app.set( 'view engine' , 'ejs' );
 app.use( cookie );
@@ -30,6 +29,11 @@ app.use( bodyParser.json() );
 app.use( bodyParser.urlencoded( { extended: true } ) );
 app.use( methodOverride( '_method' ) );
 app.use( express.static ( __dirname + '/public' ) );
+app.use( csurf() );
+app.use( function(req, res, next) {
+    res.locals._csrf = req.csrfToken();
+    next();
+});
 
 expressLoad( 'models' )
           .then( 'controllers' )
@@ -62,5 +66,5 @@ app.use( error.notFound );
 app.use( error.serverError );
 
 server.listen( process.env.PORT , function() {
-  console.log ( "Ntalk no ar." );
+  console.log( "Ntalk no ar." );
 });

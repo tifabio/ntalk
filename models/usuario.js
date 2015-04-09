@@ -1,5 +1,6 @@
 module.exports = function(app) {
-  var Schema = require('mongoose').Schema;
+  var db     = require( '../libs/db_connect' );
+  var Schema = require( 'mongoose' ).Schema;
 
   var contato = Schema({
     nome: String,
