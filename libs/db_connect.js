@@ -1,5 +1,5 @@
 var mongoose  = require( 'mongoose' ),
-    mongo_url = process.env.MONGO_URL,
+    mongo_url = process.env.MONGOLAB_URI,
     single_connection;
     
 module.exports = function () {
