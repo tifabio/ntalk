@@ -1,6 +1,6 @@
 module.exports = function ( io ) {
     var crypto  = require( 'crypto' ),
-        redis = require( 'redis' ).createClient(process.env.REDIS_URL),
+        redis = ( process.env.REDIS_URL ) ? require( 'redis' ).createClient( process.env.REDIS_URL ) : require( 'redis' ).createClient(),
         sockets = io.sockets,
         onlines = {};
         
@@ -39,6 +39,9 @@ module.exports = function ( io ) {
             var sala = session.sala,
                 data = { email: usuario.email, sala: sala },
                 msg = "<b>" + usuario.nome + ":</b> " + msg + "<br>";
+                
+            redis.lpush( sala, msg );
+                
             client.broadcast.emit( 'new-message', data );
             sockets.in(sala).emit( 'send-client', msg );
         });
@@ -46,6 +49,8 @@ module.exports = function ( io ) {
         client.on( 'disconnect', function() {
             var sala = session.sala,
                 msg = "<b>" + usuario.nome + ":</b> saiu.<br>";
+            
+            redis.lpush( sala, msg );
             
             client.broadcast.emit('notify-offlines', usuario.email);
             sockets.in(sala).emit( 'send-client', msg );
