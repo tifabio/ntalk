@@ -1,5 +1,6 @@
 module.exports = function ( io ) {
     var crypto  = require( 'crypto' ),
+        redis = require( 'redis' ).createClient(process.env.REDIS_URL),
         sockets = io.sockets,
         onlines = {};
         
@@ -22,6 +23,16 @@ module.exports = function ( io ) {
             }
             session.sala = sala;
             client.join( sala );
+            
+            var msg = "<b>"+usuario.nome+":</b> entrou.<br>";
+            
+            redis.lpush( sala, msg, function( erro , res ) {
+                redis.lrange( sala, 0, -1, function( erro , msgs ) {
+                    msgs.forEach( function( msg ) {
+                    	sockets.in( sala ).emit( 'send-client', msg );
+                    });
+                });
+            });
         });
         
         client.on( 'send-server', function(msg) {
